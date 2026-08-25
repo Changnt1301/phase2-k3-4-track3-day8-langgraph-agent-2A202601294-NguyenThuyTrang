@@ -2,19 +2,22 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from langgraph.checkpoint.base import BaseCheckpointSaver
 
 
-def build_checkpointer(kind: str = "memory", database_url: str | None = None) -> Any | None:
+def build_checkpointer(
+    kind: str = "memory", database_url: str | None = None
+) -> BaseCheckpointSaver | None:
     """Return a LangGraph checkpointer.
 
-    TODO(student): implement SQLite support for the persistence extension track.
-    The starter provides MemorySaver only — SQLite/Postgres are extension tasks.
-
-    For SQLite:
-    - pip install langgraph-checkpoint-sqlite
-    - Use SqliteSaver with sqlite3.connect() and WAL mode
-    - See: https://langchain-ai.github.io/langgraph/how-tos/persistence/
+    - "none": no persistence.
+    - "memory": in-process MemorySaver (lost when the process exits).
+    - "sqlite": SqliteSaver backed by a file on disk, so state survives a process
+      restart. thread_id (one per scenario) scopes each run's checkpoint history.
+    - "postgres": optional extension, not implemented.
     """
     if kind == "none":
         return None
@@ -23,10 +26,19 @@ def build_checkpointer(kind: str = "memory", database_url: str | None = None) ->
 
         return MemorySaver()
     if kind == "sqlite":
-        raise NotImplementedError(
-            "TODO(student): implement SQLite checkpointer. "
-            "Hint: pip install langgraph-checkpoint-sqlite, then use SqliteSaver"
-        )
+        import sqlite3
+
+        from langgraph.checkpoint.sqlite import SqliteSaver
+
+        db_path = database_url or "checkpoints.db"
+        if db_path.startswith("sqlite:///"):
+            db_path = db_path[len("sqlite:///") :]
+
+        conn = sqlite3.connect(db_path, check_same_thread=False)
+        conn.execute("PRAGMA journal_mode=WAL")
+        saver = SqliteSaver(conn=conn)
+        saver.setup()
+        return saver
     if kind == "postgres":
         raise NotImplementedError(
             "TODO(student): implement Postgres checkpointer (optional extension)"

@@ -12,9 +12,13 @@ Usage in nodes:
 from __future__ import annotations
 
 import os
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from langchain_core.language_models import BaseChatModel
 
 
-def get_llm(model: str | None = None, temperature: float = 0.0):
+def get_llm(model: str | None = None, temperature: float = 0.0) -> BaseChatModel:
     """Create an LLM client from environment configuration.
 
     Checks for API keys in this order:
@@ -30,7 +34,7 @@ def get_llm(model: str | None = None, temperature: float = 0.0):
         except ImportError as exc:
             raise RuntimeError("Install: pip install langchain-google-genai") from exc
         return ChatGoogleGenerativeAI(
-            model=model or os.getenv("LLM_MODEL", "gemini-2.5-flash"),
+            model=model or os.getenv("LLM_MODEL", "gemini-flash-lite-latest"),
             google_api_key=os.getenv("GEMINI_API_KEY"),
             temperature=temperature,
         )
@@ -51,7 +55,7 @@ def get_llm(model: str | None = None, temperature: float = 0.0):
         except ImportError as exc:
             raise RuntimeError("Install: pip install langchain-anthropic") from exc
         return ChatAnthropic(
-            model=model or os.getenv("LLM_MODEL", "claude-sonnet-4-20250514"),
+            model=model or os.getenv("LLM_MODEL", "claude-sonnet-5"),
             temperature=temperature,
         )
 
