@@ -2,9 +2,9 @@
 
 ## 1. Team / student
 
-- Name: (fill in)
-- Repo/commit: (fill in)
-- Date: (fill in)
+- Name: Nguyễn Thuỳ Trang
+- Repo/commit: Changnt1301/phase2-k3-4-track3-day8-langgraph-agent-2A202601294-NguyenThuyTrang @ 2ae2bf5
+- Date: 25/08/2026
 
 ## 2. Architecture
 

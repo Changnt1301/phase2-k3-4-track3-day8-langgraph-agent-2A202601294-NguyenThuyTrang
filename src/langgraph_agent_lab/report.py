@@ -19,9 +19,12 @@ def render_report(metrics: MetricsReport) -> str:
     lines.append("")
     lines.append("## 1. Team / student")
     lines.append("")
-    lines.append("- Name: (fill in)")
-    lines.append("- Repo/commit: (fill in)")
-    lines.append("- Date: (fill in)")
+    lines.append("- Name: Nguyễn Thuỳ Trang")
+    lines.append(
+        "- Repo/commit: Changnt1301/phase2-k3-4-track3-day8-langgraph-agent-2A202601294-NguyenThuyTrang "
+        "@ 2ae2bf5"
+    )
+    lines.append("- Date: 25/08/2026")
     lines.append("")
 
     lines.append("## 2. Architecture")
